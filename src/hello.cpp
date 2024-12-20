@@ -1,8 +1,8 @@
-#include "include/static/hello.h"
-#include <iostream>
+#include "hello.h"
+#include "fmt/xchar.h"
 
 void Hello::print() {
-    std::cout << "Hello, World" << std::endl;
+    fmt::println("Hello World!");
 }
 
 std::string Hello::echo(std::string input) {

@@ -13,16 +13,16 @@ include(FetchContent)
 
 # Declare fmt
 FetchContent_Declare(
-    fmt
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG 10.2.1
+        fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG 10.2.1
 )
 
 # Declare Catch2
 FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.5.2
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG v3.5.2
 )
 
 # Make the libraries available
@@ -39,32 +39,47 @@ add_library(hello::library ALIAS hello_library)
 
 target_include_directories(hello_library
         PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/src/include/static
 )
 
-target_link_libraries(hello_library PRIVATE fmt::fmt)
+target_link_libraries(hello_library
+        PRIVATE
+        fmt::fmt-header-only)
 
 ############################################################
 # Create Main executable
 ############################################################
 
-add_executable(start_up 
-    src/main.cpp
+add_executable(start_up
+        src/main.cpp
+)
+
+target_include_directories(start_up
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/src/include/static
 )
 
 # Link libraries to main executable
-target_link_libraries(start_up PRIVATE hello::library)
+target_link_libraries(start_up
+        PRIVATE
+        hello::library
+        fmt::fmt-header-only)
 
 ############################################################
 # Create Test executable
 ############################################################
 
 add_executable(unit_tests
-    test/unit_tests.cpp
+        test/unit_tests.cpp
+)
+
+target_include_directories(unit_tests
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/src/include/static
 )
 
 # Link libraries to test executable
-target_link_libraries(unit_tests PRIVATE 
-    hello::library
-    Catch2::Catch2WithMain
+target_link_libraries(unit_tests PRIVATE
+        hello::library
+        Catch2::Catch2WithMain
 )
