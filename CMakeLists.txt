@@ -8,6 +8,14 @@ project(start_up)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Debug/Release configuration settings
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+
+# Create separate output directories for Debug and Release
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/Debug)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release)
+
 # Include FetchContent
 include(FetchContent)
 
@@ -47,23 +55,46 @@ target_link_libraries(hello_library
         fmt::fmt-header-only)
 
 ############################################################
-# Create Main executable
+# Create Main executables (Debug and Release)
 ############################################################
 
-add_executable(start_up
-        src/main.cpp
+# Debug executable
+add_executable(start_up_debug src/main.cpp)
+set_target_properties(start_up_debug PROPERTIES 
+    OUTPUT_NAME "start_up"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
+    COMPILE_FLAGS ${CMAKE_CXX_FLAGS_DEBUG}
 )
 
-target_include_directories(start_up
-        PUBLIC
-        ${PROJECT_SOURCE_DIR}/src/include/static
+target_include_directories(start_up_debug
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/src/include/static
 )
 
-# Link libraries to main executable
-target_link_libraries(start_up
-        PRIVATE
-        hello::library
-        fmt::fmt-header-only)
+target_link_libraries(start_up_debug
+    PRIVATE
+    hello::library
+    fmt::fmt-header-only
+)
+
+# Release executable
+add_executable(start_up_release src/main.cpp)
+set_target_properties(start_up_release PROPERTIES 
+    OUTPUT_NAME "start_up"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
+    COMPILE_FLAGS ${CMAKE_CXX_FLAGS_RELEASE}
+)
+
+target_include_directories(start_up_release
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/src/include/static
+)
+
+target_link_libraries(start_up_release
+    PRIVATE
+    hello::library
+    fmt::fmt-header-only
+)
 
 ############################################################
 # Create Test executable
