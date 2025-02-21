@@ -1,11 +1,9 @@
-#include <catch2/catch_test_macros.hpp>
-#include  "hello.h"
-#define CATCH_CONFIG_MAIN
+#include <gtest/gtest.h>
+#include "hello.h"
 
-
-TEST_CASE("Echo returns input string", "[echo]") {
+TEST(HelloTest, EchoReturnsInputString) {
     Hello hello;
-    REQUIRE(hello.echo("test") == "test");
-    REQUIRE(hello.echo("hello world") == "hello world");
-    REQUIRE(hello.echo("").empty());
+    EXPECT_EQ(hello.echo("test"), "test");
+    EXPECT_EQ(hello.echo("hello world"), "hello world");
+    EXPECT_TRUE(hello.echo("").empty());
 }

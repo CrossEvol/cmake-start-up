@@ -27,10 +27,12 @@
 *.lib
 
 # Executables
+build
 *.exe
 *.out
 *.app
 
 # IDE
-cmake-build-debug-mingw
+cmake-build-*
 .vscode
+
